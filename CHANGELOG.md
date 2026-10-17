@@ -6,8 +6,16 @@ This repository starts at 2.1.0, the D2 version of the monitor-only edition. Ear
 2.0.0 in [cerbo-nomadic-d1-monitor](https://github.com/CKOCI13/cerbo-nomadic-d1-monitor), and 1.0.0 to 1.3.0 (with control)
 in [cerbo-nomadic-d1](https://github.com/CKOCI13/cerbo-nomadic-d1). Their entries are kept below for reference.
 
-## Unreleased
+## 2.1.1 (2026-10-17): test release
 
+- **Finds its CAN port by itself:** `interface = auto` is the new default. The driver listens on every CAN
+  port and uses the one it hears the D2 on, so the same file works on any Cerbo (`can1` on the original,
+  `vecan1` on the MK2) with no settings to edit. It only ever listens. The device page shows the port it found.
+- **USB stick / SD card installs once:** the file is now `venus-data-nomadic-d2-monitor.tar.gz`, and after installing, the
+  Cerbo renames it on the stick to `...tar.gz.installed`, so leaving the stick in can't reinstall it or put old
+  settings back. A ready-made file is attached to each release, so you no longer need to build it.
+- **Venus OS "Modification checks":** the guide now says to check that modifications are enabled (the default);
+  when they are off, Venus OS disables the start-up script and the driver disappears after a restart.
 - **Cerbo CAN port instructions:** the guide and README now cover both Cerbo models. On a **Cerbo GX MK2**, use
   **VE.Can 2** with "Up, but no services". On an **original Cerbo GX**, the BMS-Can port only runs at 500 kbit/s and
   can't be set to "Up, but no services", which the old step 3c asked for.
