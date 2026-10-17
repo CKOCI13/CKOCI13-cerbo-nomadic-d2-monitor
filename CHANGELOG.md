@@ -6,6 +6,12 @@ This repository starts at 2.1.0, the D2 version of the monitor-only edition. Ear
 2.0.0 in [cerbo-nomadic-d1-monitor](https://github.com/CKOCI13/cerbo-nomadic-d1-monitor), and 1.0.0 to 1.3.0 (with control)
 in [cerbo-nomadic-d1](https://github.com/CKOCI13/cerbo-nomadic-d1). Their entries are kept below for reference.
 
+## Unreleased
+
+- **Cerbo CAN port instructions:** the guide and README now cover both Cerbo models. On a **Cerbo GX MK2**, use
+  **VE.Can 2** with "Up, but no services". On an **original Cerbo GX**, the BMS-Can port only runs at 500 kbit/s and
+  can't be set to "Up, but no services", which the old step 3c asked for.
+
 ## 2.1.0 (2026-10-17): first D2 release
 
 This repository is the D2 version of [cerbo-nomadic-d1-monitor](https://github.com/CKOCI13/cerbo-nomadic-d1-monitor),
