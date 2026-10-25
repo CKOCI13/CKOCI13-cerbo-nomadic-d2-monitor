@@ -256,6 +256,7 @@ Everything in [`docs/images`](images) and both PDFs are built from [`docs/src`](
 | Source | Produces |
 |---|---|
 | [`figures.html`](src/figures.html), [`figures-shared.html`](src/figures-shared.html) | Every element with a `data-figure="name"` attribute becomes `images/name.png` (the Cerbo screens, VRM app, explainer graphics and wiring diagrams). `figures-shared.html` holds the ones shared with the control edition |
+| [`wiring.html`](src/wiring.html) | The wiring pictures (`wiring-*.png`, `explained-cable.png`), the same file in all four repositories apart from `data-model`. Rebuild with `node docs/src/build-wiring.cjs` |
 | [`demo_server.py`](src/demo_server.py) | `images/web-page.png`, a real screenshot of the monitor's page |
 | [`installation-guide.html`](src/installation-guide.html), [`safe-test-plan.html`](src/safe-test-plan.html), [`print.css`](src/print.css) | `installation-guide.pdf`, `safe-test-plan.pdf` |
 
