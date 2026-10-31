@@ -6,6 +6,12 @@ This repository starts at 2.1.0, the D2 version of the monitor-only edition. Ear
 2.0.0 in [cerbo-nomadic-d1-monitor](https://github.com/CKOCI13/cerbo-nomadic-d1-monitor), and 1.0.0 to 1.3.0 (with control)
 in [cerbo-nomadic-d1](https://github.com/CKOCI13/cerbo-nomadic-d1). Their entries are kept below for reference.
 
+## 2.1.3 (2026-10-31)
+
+- **Fahrenheit.** The web page now shows the converter temperature in the unit set on the Cerbo (**Settings → General → Display & Appearance → Data units → Temperature**), the same unit the Cerbo screen and VRM already used for it. Choose Fahrenheit there for °F. The live reading, the temperature chart and the history table all follow it, and a change on the Cerbo shows on the page within about 10 seconds. To force one unit on the page, set `temperature_unit = fahrenheit` or `celsius` in the `[web]` part of `config.ini`. The default is `auto`. On a PC (`--simulate` or `--no-dbus`) the page shows °F.
+- **Docs in °F first:** the Safe Test Plan's limits (248 °F / 120 °C shutdown), the worked example in "How it works" and the Cerbo pictures now give Fahrenheit. The installation guide and the driver reference say where to choose the unit.
+- New tests: `tests/test_temperature_unit.py`.
+
 ## Documentation update 2 (2026-10-25, driver unchanged)
 
 - **Plain-language pass** for the README, Installation Guide and Safe Test Plan: long sentences split up, the troubleshooting checklist made into a numbered list, and new glossary entries (lever connector, current limit, Automatic with limits).
