@@ -8,14 +8,14 @@
   :root {
     color-scheme: light;
     --bg: #f4f5f7; --card: #ffffff; --text: #1b1f24; --muted: #5d6673; --line: #e1e4e8; --grid: #eceef1;
-    --accent: #1f6feb; --ok: #1a7f37; --bad: #cf222e; --bad-bg: #ffebe9;
+    --accent: #1f6feb; --ok: #1a7f37; --warn: #b35900; --bad: #cf222e; --bad-bg: #ffebe9;
     --lv: #eb6834; --hv: #2a78d6; --temp: #1baf7a;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       color-scheme: dark;
       --bg: #0d1117; --card: #161b22; --text: #e6edf3; --muted: #8b949e; --line: #30363d; --grid: #222831;
-      --accent: #2f81f7; --ok: #3fb950; --bad: #f85149; --bad-bg: #3d1214;
+      --accent: #2f81f7; --ok: #3fb950; --warn: #e3963e; --bad: #f85149; --bad-bg: #3d1214;
       --lv: #d95926; --hv: #3987e5; --temp: #199e70;
     }
   }
@@ -118,6 +118,7 @@
     </div>
     <div class="card"><h2>Converter</h2>
       <div class="big" id="temp">—</div>
+      <div class="row"><span>Temperature</span><span id="temp-state">—</span></div>
       <div class="row"><span>Mode</span><span id="mode">—</span></div>
       <div class="row"><span>Precharge</span><span id="prech">—</span></div>
     </div>
@@ -191,6 +192,14 @@ function render(s) {
   $('hv-p').textContent = fmt(s.power.hv, 0, 'W');
   if (s.temperature_unit) tUnit = s.temperature_unit;
   $('temp').textContent = fmt(toUnit(e.temperature), 0, tSuffix());
+  // Monitor's own levels ([temperature] in config.ini) and the converter's derating point
+  const lim = s.temperature_limits || {}, lvl = s.temperature_level || 0;
+  const tShow = c => c == null ? '—' : toUnit(c).toFixed(0) + ' ' + tSuffix();
+  $('temp').style.color = lvl === 2 ? 'var(--bad)' : lvl === 1 ? 'var(--warn)' : '';
+  $('temp-state').textContent = e.temperature == null ? '—' : ['OK', 'Warning', 'Alarm'][lvl];
+  $('temp-state').style.color = $('temp').style.color;
+  $('temp-state').title = 'Warning from ' + tShow(lim.warning) + ', alarm from ' + tShow(lim.alarm)
+    + '. The D2 derates from ' + tShow(lim.derate) + ' and stops above ' + tShow(lim.shutdown) + '.';
 
   // Energy flow: the side whose current is positive is being charged (the output).
   const lvp = s.power.lv, hvp = s.power.hv;
