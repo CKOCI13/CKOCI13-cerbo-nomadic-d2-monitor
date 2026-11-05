@@ -171,6 +171,22 @@ item against them:
 - `/Settings/Type` must be valid and have its bit set in `/Settings/ValidTypes`.
 - A value item needs `/Settings/Unit` (`/Temperature` is converted to the GX's unit; `V`, `A` and `W` are shown as is).
 
+### Temperature (`TemperatureWatch`, `TemperatureSensor`)
+
+- `TemperatureWatch` turns the board temperature into 0 ok / 1 warning / 2 alarm from `[temperature]` (°C), with
+  3 °C hysteresis. It feeds `/Alarms/HighTemperature`, the Alarm item (two extra entries at the end of
+  `ALARM_LABELS`, after the D1's own alarms; level 2 makes `/Status` 1) and the web page.
+- Victron's `venus-platform` (`alarm_item.cpp`, `createAlternatorAlarms` → `createDcMeterAlarms`) raises a
+  "High Temperature" notification from `/Alarms/HighTemperature` with the value of `/Dc/0/Temperature`. It has no
+  temperature alarm for `dcdc` services.
+- `/Dc/0/Temperature` is published only as an alternator: `gui-v2` labels it "Alternator temperature" there
+  (`PageAlternatorModel.qml`) and shows it on the Overview tile (`DcInputWidget.qml`), but "Battery temperature"
+  on a DC-DC converter's page (`PageDcDcConverter.qml`).
+- `TemperatureSensor` is a second D-Bus service, `com.victronenergy.temperature.nomadic_<interface>`, on its own
+  private bus connection (two services can't share one connection's object paths). Type 5 (water heater)
+  because `EnvironmentTab.qml` sizes each gauge by type and only that one (0–100 °C) fits a working converter.
+  `/TemperatureType` is the one writable path, kept in `ui.json`.
+
 ## History
 
 `class History` keeps a `deque` of up to 8,640 points (24 h × one per 10 s). `Telemetry.feed()` adds every
@@ -279,7 +295,9 @@ Port names differ between Cerbo models (`can0`/`can1` on the original, `vecan0`/
 USB-stick install can't run `--scan`, so the default is `interface = auto`. `AutoCanBus` wraps `CanBus`: its first
 `recv()` (in the rx thread) calls `find_converter()` repeatedly, which opens a filtered, listen-only socket on each
 CAN interface in `/sys/class/net` for one second and accepts the first port with at least `AUTO_MIN_FRAMES`
-standard-ID frames carrying the converter's IDs (other traffic, such as a battery BMS on 0x35x, doesn't count).
+8-byte standard-ID frames carrying the converter's IDs, including both 0x066 and 0x088 (`AUTO_REQUIRED_IDS`).
+Other traffic, such as a battery BMS on 0x35x, doesn't count, and neither does a stray frame on another bus that
+happens to use one of the converter's IDs.
 It then binds that port for good, writes it into `cfg['can']['interface']` (so the web page and `/Mgmt/Connection`
 show it) and logs it. The D-Bus service is `nomadic_auto`. The monitor's `AutoCanBus` has no `send()` at all.
 

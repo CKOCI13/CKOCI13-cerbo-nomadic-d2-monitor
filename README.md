@@ -71,6 +71,10 @@ New to all this? **[How it works, in plain English](docs/how-it-works.md)** expl
   12 V side and its 48 V side.
 - **On the Overview page:** an Alternator tile with the power going into the 48 V battery (minus while the D2 takes
   power from it for the 12 V side). The D2 is listed as an alternator so the Cerbo's DC Loads figure stays right.
+- **The D2's temperature on every screen:** the Overview tile, the device page, a gauge on Levels › Environment
+  (it's also listed as a temperature sensor), the switch pane, VRM and the web page. The converter doesn't warn before
+  it gets hot enough to cut back its power (221 °F), so the monitor does: a Cerbo **High Temperature** notification
+  at 212 °F and an alarm at 221 °F, both adjustable.
 - **Everywhere Victron does:** Remote Console, the VRM portal and app, MQTT and Node-RED.
 - **Its own web page** at `http://<cerbo-address>:8088`. Any tablet (Android or iPad), phone or laptop on the same
   network can open it. It shows live values, which way the energy is flowing, and charts of the last 24 hours.
@@ -195,6 +199,8 @@ v3.85, November 2026):
   operating mode (boost or buck), not from the sign. The values as sent are kept in the web page's `/api/status`
   (`lv_current_reported`, `hv_current_reported`).
 - That first test found a crash on the Cerbo's 32-bit Python, fixed in 2.1.3.
+- The D1's board temperature reached **180 °F (82 °C)** while boosting, with no fault: well inside its full-output
+  range (up to 221 °F).
 
 Whether the D2 behaves the same isn't known yet. The Safe Test Plan checks the direction with a clamp meter.
 
