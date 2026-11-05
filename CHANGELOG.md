@@ -6,6 +6,15 @@ This repository starts at 2.1.0, the D2 version of the monitor-only edition. Ear
 2.0.0 in [cerbo-nomadic-d1-monitor](https://github.com/CKOCI13/cerbo-nomadic-d1-monitor), and 1.0.0 to 1.3.0 (with control)
 in [cerbo-nomadic-d1](https://github.com/CKOCI13/cerbo-nomadic-d1). Their entries are kept below for reference.
 
+## 2.2.0 (2026-11-04)
+
+From the first test of the [D1 monitor](https://github.com/CKOCI13/cerbo-nomadic-d1-monitor) on real hardware (Cerbo GX, Venus OS v3.85, a D1 boosting from a running engine; the D2 uses the same CAN messages):
+
+- **Shown as an alternator by default** (`service_class = alternator`). Victron's system calculation leaves DC-DC converters out of its sums, so the Cerbo's **DC Loads** figure went negative while the converter charged the 48 V battery. As an alternator, its power into or out of the 48 V battery is counted, and it gets its own **tile on the Overview page**: + watts while it charges the 48 V battery, − watts while it powers the 12 V side from it. Its device page shows the 48 V side as Output and the 12 V side as Input. Nothing is sent to the converter: the service has no `/Link/*` paths, so DVCC writes nothing. `service_class = dcdc` gives the old listing.
+- **Direction from the operating mode.** While boosting, the D1 reported both currents as positive, so the web page's flow arrow pointed the wrong way. While the converter says it's boosting or bucking, the monitor now sets the signs from that (+ = into that battery) everywhere: D-Bus, switch pane, web page and history. The values as received are kept as `lv_current_reported` / `hv_current_reported` in `/api/status`.
+- **No more "Battery temperature".** The converter's own temperature was published as `/Dc/0/Temperature`, which the device page labelled "Battery temperature". It's left out there now; the switch pane and web page still show it.
+- New tests (`tests/test_direction.py`) use the readings from that test.
+
 ## 2.1.3 (2026-11-04)
 
 - **Fix: the driver crashed on the Cerbo GX as soon as it opened the CAN port.** The Cerbo runs 32-bit Python, where Python's `socket.CAN_EFF_FLAG` is a negative number, and building the CAN receive filter from it failed with `struct.error: 'I' format requires 0 <= number <= 4294967295`. The service then restarted every few seconds, so the converter never stayed on the Cerbo's screen or in the device list. The driver now uses the fixed values from Linux's `can.h`. The tests ran on 64-bit PCs, where the constant is positive, so they missed it; a new test (`tests/test_can_filter_32bit.py`) builds the filter with the 32-bit value. Found in the first test on real hardware.

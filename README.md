@@ -68,7 +68,9 @@ New to all this? **[How it works, in plain English](docs/how-it-works.md)** expl
 - **The D2's readings:** 12 V and 48 V side voltage, current and power, temperature, what it's doing (standby,
   autonomous, derating…) and every alarm and fault it reports, in plain words.
 - **On the Cerbo's screen:** three cards in the switch pane: the converter (alarm, status, temperature), its
-  12 V side and its 48 V side. The D2 also appears in the device list as a DC-DC converter.
+  12 V side and its 48 V side.
+- **On the Overview page:** an Alternator tile with the power going into the 48 V battery (minus while the D2 takes
+  power from it for the 12 V side). The D2 is listed as an alternator so the Cerbo's DC Loads figure stays right.
 - **Everywhere Victron does:** Remote Console, the VRM portal and app, MQTT and Node-RED.
 - **Its own web page** at `http://<cerbo-address>:8088`. Any tablet (Android or iPad), phone or laptop on the same
   network can open it. It shows live values, which way the energy is flowing, and charts of the last 24 hours.
@@ -184,11 +186,17 @@ The D2 keeps protecting itself, as always: over-voltage, over-current, short cir
 
 Every change is tested automatically by GitHub ([the tests badge](#cerbo-nomadic-d2-monitor) above).
 
-**Not yet tried on real hardware**, and **not yet known** (Nomadic's documents don't say):
+**Not yet tried with a D2.** The D2 uses the same CAN messages as the D1, and the
+[D1 monitor](https://github.com/CKOCI13/cerbo-nomadic-d1-monitor) has run on real hardware (Cerbo GX, Venus OS
+v3.85, November 2026):
 
-1. Does the D2 send its readings even when it isn't receiving commands? The monitor assumes it does; the
-   "find the converter" step shows it straight away.
-2. Which direction counts as positive current in the D2's readings. The Safe Test Plan checks this with a clamp meter.
+- The D1 sent its readings without receiving any commands, at **500 kbit/s** on that van.
+- While boosting, the D1 reported **both currents as positive**. So the monitor takes the direction from the
+  operating mode (boost or buck), not from the sign. The values as sent are kept in the web page's `/api/status`
+  (`lv_current_reported`, `hv_current_reported`).
+- That first test found a crash on the Cerbo's 32-bit Python, fixed in 2.1.3.
+
+Whether the D2 behaves the same isn't known yet. The Safe Test Plan checks the direction with a clamp meter.
 
 If you try it, please share what you find in an [issue](../../issues).
 
