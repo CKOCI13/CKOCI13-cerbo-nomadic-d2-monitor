@@ -123,6 +123,7 @@ Edit `config.ini`:
   `--scan` reported. Names differ between models: `can0`/`can1`, or `vecan0`/`vecan1` on the Cerbo GX MK2
 * `custom_name`: the name on the GX and in VRM (default "DC-DC D2")
 * `password`: optional, for the web page
+* `temperature_unit`: `auto` (the Cerbo's own setting), `fahrenheit` or `celsius`, for the web page
 * `switch_pane = no` if you don't want the cards on the GX screen and in VRM
 
 ## 7. Install as a service
@@ -156,7 +157,7 @@ Three cards appear. All items are read-only.
 |---|---|---|
 | **DC-DC D2** | Alarm | The most serious active alarm, or None. The tile turns red ("Fault") on a fault, and "N active" appears when there are several |
 | | Status | The converter's operating mode (Standby, Autonomous, Buck, Boost, Derating…), or "No communication" |
-| | Temperature | Power board temperature, in your GX temperature unit |
+| | Temperature | Power board temperature, in your GX temperature unit (°F or °C, see below) |
 | | Precharge status *(hidden)* | In progress / Not active. Hidden because the D2 manual doesn't use precharge; show it from the device page |
 | **DC-DC D2 12 V side** | Current, Power, Voltage | LV side. Power = V × A |
 | **DC-DC D2 48 V side** | Current, Power, Voltage | HV side |
